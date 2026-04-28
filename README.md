@@ -1,1 +1,2 @@
-【永久免费】小火箭共享账号，shadowrocket共享账号，小火箭共享id，shadowrocket共享id，苹果小火箭下载，ios小火箭下载
+【永久免费】Shadowrocket 共享账号及下载指南
+提供 Shadowrocket（小火箭）共享 Apple ID、共享账号及 iOS 客户端下载方式。
