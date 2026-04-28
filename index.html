@@ -12,201 +12,459 @@
     <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        * { box-sizing: border-box; }
-        body { 
-            margin: 0; padding: 0; overflow-x: hidden; 
-            text-align: center; background: #f8f9fa; 
-            transition: background-color 0.3s;
+        /* ========== iOS 26 风格变量 ========== */
+        :root {
+            --bg-color: #f5f5f7;
+            --card-bg: rgba(255, 255, 255, 0.88);
+            --text-primary: #1d1c1f;
+            --text-secondary: #6c6c70;
+            --text-tertiary: #8e8e93;
+            --border-color: rgba(224, 224, 230, 0.6);
+            --accent-color: #007aff;
+            --accent-hover: #005fc1;
+            --glass-bg: rgba(255, 255, 255, 0.72);
+            --result-bg: rgba(0, 122, 255, 0.08);
+            --input-bg: rgba(255, 255, 255, 0.8);
+            --tag-bg: #e9e9ef;
+            --filter-active: #007aff;
+            --filter-inactive: #e9e9ef;
+            --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.04), 0 0 0 0.5px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 8px 28px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.02);
+            --blur-bg: saturate(180%) blur(20px);
         }
-        /* 移除顶部跑马灯所有样式 */
-        #flash-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.7; }
 
+        body.dark {
+            --bg-color: #000000;
+            --card-bg: rgba(28, 28, 30, 0.88);
+            --text-primary: #ffffff;
+            --text-secondary: #98989e;
+            --text-tertiary: #6c6c70;
+            --border-color: rgba(56, 56, 62, 0.8);
+            --accent-color: #0a84ff;
+            --accent-hover: #409cff;
+            --glass-bg: rgba(28, 28, 30, 0.78);
+            --result-bg: rgba(10, 132, 255, 0.12);
+            --input-bg: rgba(28, 28, 30, 0.8);
+            --tag-bg: #2c2c2e;
+            --filter-active: #0a84ff;
+            --filter-inactive: #2c2c2e;
+            --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.3), 0 0 0 0.5px rgba(255, 255, 255, 0.05);
+            --shadow-md: 0 8px 28px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', system-ui, 'Helvetica Neue', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
+            padding-top: 0;
+            overflow-x: hidden;
+            text-align: center;
+        }
+
+        /* 彩虹闪光背景 - 保持原有效果但增加毛玻璃叠加 */
+        #flash-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.5;
+            transition: background 0.3s ease;
+        }
+
+        /* 毛玻璃遮罩层 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-bg);
+            -webkit-backdrop-filter: var(--blur-bg);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* 主容器 - iOS 26 风格卡片 */
         main {
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 20px; padding: 30px 15px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            background: var(--card-bg);
+            backdrop-filter: var(--blur-bg);
+            -webkit-backdrop-filter: var(--blur-bg);
+            border-radius: 32px;
+            padding: 32px 24px;
+            box-shadow: var(--shadow-md);
             max-width: 900px;
             margin: 40px auto 30px;
             width: 92%;
-            position: relative; z-index: 1;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            display: flex; flex-direction: column; align-items: center;
+            position: relative;
+            z-index: 1;
+            border: 0.5px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        body.dark-mode main { background: rgba(30, 30, 30, 0.85); color: #ffffff; }
 
+        /* 头像样式 - 毛玻璃边框 */
+        main img {
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+            border: 0.5px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        /* 渐变标题 - iOS 26 风格 */
         h1 {
-            font-weight: 800; font-size: 2.2rem;
-            background: linear-gradient(90deg, #ff0000, #ff9900, #33cc33, #0099ff, #6633cc, #cc0066);
-            background-size: 600% 600%; -webkit-background-clip: text; background-clip: text;
+            font-weight: 700;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #007aff, #5856d6, #ff2d55);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
             color: transparent;
-            animation: rainbow 5s ease infinite, pulse 0.5s ease infinite alternate;
-            text-align: center; width: 100%;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 8px;
+            animation: gradientShift 5s ease infinite;
         }
 
-        .list-container { width: 100%; }
-        ol { 
-            background: rgba(255, 255, 255, 0.7); 
-            padding: 20px 15px 20px 35px; 
-            border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.2); 
-            text-align: left; margin: 0 auto; width: 100%;
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        body.dark-mode ol { background: rgba(30, 30, 30, 0.7); color: #e0e0e0; }
 
+        /* 列表容器 - 毛玻璃效果 */
+        .list-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        ol {
+            background: var(--result-bg);
+            backdrop-filter: blur(10px);
+            padding: 20px 20px 20px 45px;
+            border-radius: 20px;
+            border: 0.5px solid var(--border-color);
+            text-align: left;
+            margin: 0 auto;
+            width: 100%;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        ol li {
+            margin: 10px 0;
+            color: var(--text-primary);
+        }
+
+        ol li strong {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* 迷你按钮 - iOS 风格 */
         .mini-btn {
-            padding: 4px 8px; font-size: 12px; border-radius: 6px;
-            background: rgba(255, 255, 255, 0.1) !important;
-            box-shadow: 0 0 0 1px rgba(255, 182, 193, 0.5);
-            text-decoration: none; display: inline-block; vertical-align: middle;
-        }
-        .mini-btn span { 
-            background: linear-gradient(90deg, #ff0000, #0099ff, #cc0066); 
-            -webkit-background-clip: text; background-clip: text;
-            color: transparent; font-weight: bold;
+            padding: 6px 14px;
+            font-size: 0.75rem;
+            border-radius: 40px;
+            background: var(--tag-bg);
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 8px;
+            border: 0.5px solid var(--border-color);
+            transition: all 0.2s ease;
+            color: var(--text-primary);
         }
 
+        .mini-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .mini-btn span {
+            background: linear-gradient(135deg, #007aff, #5856d6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 600;
+        }
+
+        .mini-btn:hover span {
+            color: white;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+        }
+
+        /* 大红按钮 - iOS 大按钮风格 */
         .big-red-btn {
-            padding: 15px; font-size: 1.1rem; margin: 20px auto;
-            border-radius: 12px; background: rgba(255, 255, 255, 0.2) !important;
-            box-shadow: 0 0 0 3px rgba(255, 182, 193, 0.5);
-            display: block; width: 100%; max-width: 400px; text-decoration: none;
+            padding: 14px 24px;
+            font-size: 1rem;
+            margin: 24px auto 16px;
+            border-radius: 44px;
+            background: var(--accent-color);
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            box-shadow: var(--shadow-sm);
         }
-        .big-red-btn span { color: #8B0000 !important; font-weight: bold; text-align: center; display: block; }
 
+        .big-red-btn span {
+            color: white !important;
+            font-weight: 590;
+            text-align: center;
+            display: block;
+        }
+
+        .big-red-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            background: var(--accent-hover);
+        }
+
+        /* 浮动按钮 - 毛玻璃圆形 */
         .float-btn {
-            position: fixed; right: 15px; width: 45px; height: 45px;
-            border-radius: 50%; background: rgba(255,255,255,0.3);
-            backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center;
-            border: 1px solid rgba(255,255,255,0.4); color: #fff; cursor: pointer; z-index: 10001;
+            position: fixed;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 0.5px solid var(--border-color);
+            color: var(--text-primary);
+            cursor: pointer;
+            z-index: 10001;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
         }
-        #theme-btn { top: 60px; }
-        /* 音乐按钮已移除，只保留主题切换 */
 
+        .float-btn:hover {
+            transform: scale(1.05);
+            background: var(--tag-bg);
+        }
+
+        #theme-btn {
+            top: 80px;
+        }
+
+        /* 账号网格 */
         .accounts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
             width: 100%;
-            margin-top: 25px;
+            margin-top: 20px;
         }
+
+        /* 账号卡片 - iOS 26 毛玻璃风格 */
         .account-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
-            padding: 18px 15px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 0.5px solid var(--border-color);
+            border-radius: 20px;
+            padding: 18px;
             text-align: left;
-            transition: transform 0.2s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: var(--shadow-sm);
         }
-        body.dark-mode .account-card {
-            background: rgba(40, 40, 40, 0.8);
-            color: #eee;
-        }
+
         .account-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
         }
+
         .account-email {
-            font-weight: 700;
-            font-size: 15px;
+            font-weight: 630;
+            font-size: 0.95rem;
             word-break: break-all;
-            margin-bottom: 8px;
-            color: #2c3e50;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
         }
-        body.dark-mode .account-email {
-            color: #fff;
-        }
+
         .account-meta {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 1px dashed rgba(0,0,0,0.1);
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 0.5px solid var(--border-color);
         }
-        body.dark-mode .account-meta {
-            color: #aaa;
-            border-bottom-color: rgba(255,255,255,0.1);
-        }
+
+        /* 按钮组 */
         .account-btns {
             display: flex;
             gap: 10px;
         }
+
         .copy-btn {
             flex: 1;
-            padding: 8px;
-            border: none;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
+            padding: 10px 12px;
+            border: 0.5px solid var(--border-color);
+            border-radius: 44px;
+            font-size: 0.75rem;
+            font-weight: 590;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
+            gap: 6px;
             cursor: pointer;
-            background: rgba(255,255,255,0.9);
-            border: 1px solid #ddd;
-            transition: 0.2s;
+            background: var(--tag-bg);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
         }
-        body.dark-mode .copy-btn {
-            background: rgba(50,50,50,0.9);
-            color: #fff;
-            border-color: #555;
-        }
+
         .copy-btn:hover {
-            background: #007bff;
+            background: var(--accent-color);
             color: white;
-            border-color: #007bff;
+            border-color: var(--accent-color);
+            transform: scale(0.98);
         }
+
+        /* 加载动画 - iOS 风格 */
         .loading-spinner {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px;
+            padding: 50px;
             width: 100%;
-            color: #666;
+            color: var(--text-secondary);
         }
+
+        .spinner-border {
+            width: 36px;
+            height: 36px;
+            border: 2.5px solid var(--border-color);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 错误提示 */
         .error-message {
-            color: #dc3545;
+            color: #ff3b30;
             padding: 30px;
             text-align: center;
             width: 100%;
+            background: var(--result-bg);
+            border-radius: 20px;
+            margin-top: 16px;
         }
 
-        @keyframes rainbow { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
-        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.03); } }
+        /* toast 提示 - iOS 风格 */
+        .ios-toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            backdrop-filter: var(--blur-bg);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 44px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 9999;
+            box-shadow: var(--shadow-md);
+            border: 0.5px solid var(--border-color);
+            animation: toastFade 0.3s ease;
+        }
 
-        @media (max-width: 576px) { h1 { font-size: 1.6rem; } .big-red-btn { font-size: 1rem; } }
-        
-        /* 无跑马灯，顶部不留白 */
-        body {
-            padding-top: 0;
+        @keyframes toastFade {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 576px) {
+            main {
+                padding: 24px 18px;
+                margin: 20px auto;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+            .big-red-btn {
+                font-size: 0.9rem;
+                padding: 12px 20px;
+            }
+            .accounts-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            ol {
+                padding: 16px 16px 16px 35px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* 统计徽章样式 */
+        .stats-badge {
+            margin-top: 16px;
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            background: var(--result-bg);
+            padding: 6px 16px;
+            border-radius: 40px;
+            display: inline-block;
         }
     </style>
 </head>
-<body class="text-center">
+<body>
 
     <div id="flash-bg"></div>
-    
-    <!-- 顶部跑马灯广告已完全移除 -->
 
-    <div class="float-btn" id="theme-btn">☀️</div>
-    <!-- 音乐按钮已移除 -->
+    <div class="float-btn" id="theme-btn">🌙</div>
 
     <main>
-        <img class="shadow mb-3 rounded-circle" height="100" width="100" src="https://is4-ssl.mzstatic.com/image/thumb/Purple126/v4/c5/50/ad/c550ad28-d7bb-209c-05a6-849296bfddc5/AppIcon-0-1x_U007emarketing-0-10-0-0-85-220.png/230x0w.webp">
+        <img class="shadow mb-3 rounded-circle" height="90" width="90" src="https://is4-ssl.mzstatic.com/image/thumb/Purple126/v4/c5/50/ad/c550ad28-d7bb-209c-05a6-849296bfddc5/AppIcon-0-1x_U007emarketing-0-10-0-0-85-220.png/230x0w.webp">
         
         <h1>小钱共享小火箭</h1>
+        <div class="stats-badge">🚀 实时更新 · 高速账号池</div>
         
         <div class="list-container">
             <ol>
-                <li>打开 <strong>AppStore</strong></li>
-                <li>点击 <strong>头像</strong> -> 底部 <strong>退出登录</strong></li>
+                <li>打开 <strong>App Store</strong></li>
+                <li>点击 <strong>头像</strong> → 底部 <strong>退出登录</strong></li>
                 <li>复制 <strong>下方账号密码</strong> 登录</li>
                 <li>点击 <strong>“其他选项-不升级”</strong></li>
-                <li>搜索 <a class="mini-btn" href="https://apps.apple.com/us/app/shadowrocket/id932747118" target="_blank"><span>Shadowrocket下载</span></a></li>
-                <li>用完务必 <strong>退出登录</strong> 防止锁机 <a class="mini-btn" href="https://s0.mall.tcl.com/group1/M00/00/89/CvoGBGd37jmAL0b-AE72lMZF4xc097.mp4" target="_blank"><span>视频教程</span></a></li>
+                <li>搜索 <a class="mini-btn" href="https://apps.apple.com/us/app/shadowrocket/id932747118" target="_blank">Shadowrocket 下载</a></li>
+                <li>用完务必 <strong>退出登录</strong> 防止锁机 <a class="mini-btn" href="https://s0.mall.tcl.com/group1/M00/00/89/CvoGBGd37jmAL0b-AE72lMZF4xc097.mp4" target="_blank">视频教程</a></li>
             </ol>
         </div>
 
@@ -216,38 +474,40 @@
 
         <div id="accounts-container" style="width:100%;">
             <div class="loading-spinner" id="loading-spinner">
-                <div class="spinner-border text-primary mb-2" role="status"></div>
-                <span>正在加载最新账号池...</span>
+                <div class="spinner-border" role="status"></div>
+                <span style="margin-top: 12px;">正在加载最新账号池...</span>
             </div>
             <div id="accounts-grid" class="accounts-grid"></div>
-            <div id="error-message" class="error-message"></div>
+            <div id="error-message" class="error-message" style="display:none;"></div>
         </div>
     </main>
 
     <script>
         // 彩虹闪光背景
         const bg = document.getElementById('flash-bg');
-        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff6600', '#ff0066'];
         setInterval(() => {
-            bg.style.background = `linear-gradient(135deg, ${colors[Math.floor(Math.random()*6)]}, ${colors[Math.floor(Math.random()*6)]})`;
-        }, 1000);
+            bg.style.background = `linear-gradient(135deg, ${colors[Math.floor(Math.random()*colors.length)]}, ${colors[Math.floor(Math.random()*colors.length)]})`;
+        }, 1200);
 
-        // 主题切换 (完全移除音乐模块)
+        // 主题切换
         const tBtn = document.getElementById('theme-btn');
         tBtn.onclick = () => {
-            document.body.classList.toggle('dark-mode');
-            tBtn.innerText = document.body.classList.contains('dark-mode') ? '🌙' : '☀️';
-            localStorage.setItem('xiaoqian_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('xiaoqian_theme', isDark ? 'dark' : 'light');
+            tBtn.innerText = isDark ? '☀️' : '🌙';
         };
+        
         if(localStorage.getItem('xiaoqian_theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-            tBtn.innerText = '🌙';
-        } else if(localStorage.getItem('xiaoqian_theme') === 'light') {
-            document.body.classList.remove('dark-mode');
+            document.body.classList.add('dark');
             tBtn.innerText = '☀️';
+        } else {
+            document.body.classList.remove('dark');
+            tBtn.innerText = '🌙';
         }
 
-        // 代理请求规避跨域 (官方来源使用代理)
+        // 代理请求规避跨域
         const PROXY_URL = 'https://proxy.dsocks.uk/?url=';
         
         const SOURCES = {
@@ -260,7 +520,6 @@
 
         window.addEventListener('load', fetchAllSources);
 
-        // 生成动态更新时间 (1-60分钟内随机)
         function getRandomPastTime() {
             const now = new Date();
             const minutesAgo = Math.floor(Math.random() * 60) + 1;
@@ -282,7 +541,6 @@
                     fetchLineC().catch(err => { console.log('线路C失败:', err); return []; })
                 ]);
                 
-                // 去重基于邮箱
                 const uniqueAccounts = [];
                 const emailSet = new Set();
                 
@@ -290,10 +548,7 @@
                     if (acc.email && !emailSet.has(acc.email)) {
                         emailSet.add(acc.email);
                         uniqueAccounts.push(acc);
-                    } else if (acc.email && emailSet.has(acc.email)) {
-                        // 跳过重复
                     } else if (!acc.email && !emailSet.has(`unknown_${acc.password}`)) {
-                        // 极少数无邮箱存档，临时处理
                         emailSet.add(`unknown_${acc.password}`);
                         uniqueAccounts.push(acc);
                     }
@@ -317,13 +572,12 @@
             } catch (err) {
                 console.error('获取账号失败:', err);
                 document.getElementById('error-message').style.display = 'block';
-                document.getElementById('error-message').innerHTML = '⛔ 加载失败，可能网络波动，请点击<a href="#" onclick="location.reload();return false;">刷新页面</a>重试。' + (err.message || '');
+                document.getElementById('error-message').innerHTML = '⛔ 加载失败，可能网络波动，请点击<a href="#" onclick="location.reload();return false;" style="color:var(--accent-color);">刷新页面</a>重试。';
             } finally {
                 document.getElementById('loading-spinner').style.display = 'none';
             }
         }
 
-        // Cloudflare 解密函数 (用于LineA)
         function cfDecode(e) {
             var r = parseInt(e.substr(0, 2), 16), n, i, a = "";
             for (n = 2; n < e.length; n += 2) {
@@ -338,7 +592,6 @@
                 const response = await fetch(PROXY_URL + encodeURIComponent(SOURCES.lineA));
                 const html = await response.text();
                 const accounts = [];
-                // 匹配 data-cfemail 加密邮箱 + 相邻密码
                 const cardRegex = /col-lg-3.*?data-cfemail="([a-f0-9]+)".*?copy\('([^']+)'\)/gs;
                 let match;
                 while ((match = cardRegex.exec(html)) !== null) {
@@ -352,7 +605,6 @@
                         });
                     }
                 }
-                // 备用正则：有些页面结构不同
                 if (accounts.length === 0) {
                     const altRegex = /data-cfemail="([a-f0-9]+)".*?<button.*?copy\('([^']+)'\)/gs;
                     while ((match = altRegex.exec(html)) !== null) {
@@ -418,7 +670,6 @@
                 const response = await fetch(PROXY_URL + encodeURIComponent(SOURCES.lineC));
                 const html = await response.text();
                 const accounts = [];
-                // 匹配常见 user-card 结构 data-clipboard-text
                 const cardRegex = /user-card.*?data-clipboard-text="([^"]+)".*?data-clipboard-text="([^"]+)"/gs;
                 let match;
                 while ((match = cardRegex.exec(html)) !== null) {
@@ -432,7 +683,6 @@
                         });
                     }
                 }
-                // 第二种模式 apple id 列表
                 const appleRegex = /apple-id.*?<strong>(.*?)<\/strong>.*?密码[：:]\s*(.*?)</gs;
                 let match2;
                 while ((match2 = appleRegex.exec(html)) !== null) {
@@ -478,9 +728,9 @@
                 const card = document.createElement('div');
                 card.className = 'account-card';
                 card.innerHTML = `
-                    <div class="account-email" title="${escapeHtml(acc.email || '')}">${escapeHtml(displayEmail)}</div>
+                    <div class="account-email" title="${escapeHtml(acc.email || '')}">📧 ${escapeHtml(displayEmail)}</div>
                     <div class="account-meta">
-                        <span><i class="bi bi-check-circle-fill text-success"></i> ${escapeHtml(acc.status || '正常')}</span>
+                        <span><i class="bi bi-check-circle-fill"></i> ${escapeHtml(acc.status || '正常')}</span>
                         <span>🕒 ${acc.time || '刚刚'}</span>
                     </div>
                     <div class="account-btns">
@@ -491,15 +741,14 @@
                 grid.appendChild(card);
             });
 
-            // 绑定复制事件
             document.querySelectorAll('.copy-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const content = btn.getAttribute('data-copy-content');
-                    if (content && content !== 'undefined') {
+                    if (content && content !== 'undefined' && content !== '') {
                         copyToClipboard(content);
                     } else {
-                        alert('❌ 内容为空，无法复制');
+                        showToast('❌ 内容为空，无法复制');
                     }
                 });
             });
@@ -520,6 +769,17 @@
             return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
+        function showToast(message) {
+            const existingToast = document.querySelector('.ios-toast');
+            if (existingToast) existingToast.remove();
+            
+            const toastDiv = document.createElement('div');
+            toastDiv.className = 'ios-toast';
+            toastDiv.innerText = message;
+            document.body.appendChild(toastDiv);
+            setTimeout(() => toastDiv.remove(), 1800);
+        }
+
         function copyToClipboard(text) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
@@ -527,26 +787,9 @@
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
-            // 轻提示风格
-            const toastDiv = document.createElement('div');
-            toastDiv.innerText = '✅ 已复制: ' + (text.length > 20 ? text.substring(0,18)+'...' : text);
-            toastDiv.style.position = 'fixed';
-            toastDiv.style.bottom = '80px';
-            toastDiv.style.left = '50%';
-            toastDiv.style.transform = 'translateX(-50%)';
-            toastDiv.style.backgroundColor = '#28a745';
-            toastDiv.style.color = 'white';
-            toastDiv.style.padding = '8px 20px';
-            toastDiv.style.borderRadius = '40px';
-            toastDiv.style.fontSize = '14px';
-            toastDiv.style.zIndex = '9999';
-            toastDiv.style.fontWeight = 'bold';
-            toastDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
-            document.body.appendChild(toastDiv);
-            setTimeout(() => toastDiv.remove(), 1800);
+            showToast('✅ 已复制: ' + (text.length > 25 ? text.substring(0, 22) + '...' : text));
         }
 
-        // 百度统计保留（可选）
         var _hmt = _hmt || [];
         (function() {
           var hm = document.createElement("script");
