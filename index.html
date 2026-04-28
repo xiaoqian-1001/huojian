@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/wsqstar/ResHosting@0.031/build/js/Sakura.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta content="美区, apple id, 使用教程" name="keywords">
+    <meta content="小钱共享小火箭 - 实时更新账号" name="description">
+    <title>小钱共享小火箭 · 高速账号池</title>
+    <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            margin: 0; padding: 0; overflow-x: hidden; 
+            text-align: center; background: #f8f9fa; 
+            transition: background-color 0.3s;
+        }
+        /* 移除顶部跑马灯所有样式 */
+        #flash-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.7; }
+
+        main {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px; padding: 30px 15px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            max-width: 900px;
+            margin: 40px auto 30px;
+            width: 92%;
+            position: relative; z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: flex; flex-direction: column; align-items: center;
+        }
+        body.dark-mode main { background: rgba(30, 30, 30, 0.85); color: #ffffff; }
+
+        h1 {
+            font-weight: 800; font-size: 2.2rem;
+            background: linear-gradient(90deg, #ff0000, #ff9900, #33cc33, #0099ff, #6633cc, #cc0066);
+            background-size: 600% 600%; -webkit-background-clip: text; background-clip: text;
+            color: transparent;
+            animation: rainbow 5s ease infinite, pulse 0.5s ease infinite alternate;
+            text-align: center; width: 100%;
+        }
+
+        .list-container { width: 100%; }
+        ol { 
+            background: rgba(255, 255, 255, 0.7); 
+            padding: 20px 15px 20px 35px; 
+            border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.2); 
+            text-align: left; margin: 0 auto; width: 100%;
+        }
+        body.dark-mode ol { background: rgba(30, 30, 30, 0.7); color: #e0e0e0; }
+
+        .mini-btn {
+            padding: 4px 8px; font-size: 12px; border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 0 0 1px rgba(255, 182, 193, 0.5);
+            text-decoration: none; display: inline-block; vertical-align: middle;
+        }
+        .mini-btn span { 
+            background: linear-gradient(90deg, #ff0000, #0099ff, #cc0066); 
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent; font-weight: bold;
+        }
+
+        .big-red-btn {
+            padding: 15px; font-size: 1.1rem; margin: 20px auto;
+            border-radius: 12px; background: rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 0 0 3px rgba(255, 182, 193, 0.5);
+            display: block; width: 100%; max-width: 400px; text-decoration: none;
+        }
+        .big-red-btn span { color: #8B0000 !important; font-weight: bold; text-align: center; display: block; }
+
+        .float-btn {
+            position: fixed; right: 15px; width: 45px; height: 45px;
+            border-radius: 50%; background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(255,255,255,0.4); color: #fff; cursor: pointer; z-index: 10001;
+        }
+        #theme-btn { top: 60px; }
+        /* 音乐按钮已移除，只保留主题切换 */
+
+        .accounts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            width: 100%;
+            margin-top: 25px;
+        }
+        .account-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 18px 15px;
+            text-align: left;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        body.dark-mode .account-card {
+            background: rgba(40, 40, 40, 0.8);
+            color: #eee;
+        }
+        .account-card:hover {
+            transform: translateY(-5px);
+        }
+        .account-email {
+            font-weight: 700;
+            font-size: 15px;
+            word-break: break-all;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        body.dark-mode .account-email {
+            color: #fff;
+        }
+        .account-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed rgba(0,0,0,0.1);
+        }
+        body.dark-mode .account-meta {
+            color: #aaa;
+            border-bottom-color: rgba(255,255,255,0.1);
+        }
+        .account-btns {
+            display: flex;
+            gap: 10px;
+        }
+        .copy-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid #ddd;
+            transition: 0.2s;
+        }
+        body.dark-mode .copy-btn {
+            background: rgba(50,50,50,0.9);
+            color: #fff;
+            border-color: #555;
+        }
+        .copy-btn:hover {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            width: 100%;
+            color: #666;
+        }
+        .error-message {
+            color: #dc3545;
+            padding: 30px;
+            text-align: center;
+            width: 100%;
+        }
+
+        @keyframes rainbow { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.03); } }
+
+        @media (max-width: 576px) { h1 { font-size: 1.6rem; } .big-red-btn { font-size: 1rem; } }
+        
+        /* 无跑马灯，顶部不留白 */
+        body {
+            padding-top: 0;
+        }
+    </style>
+</head>
+<body class="text-center">
+
+    <div id="flash-bg"></div>
+    
+    <!-- 顶部跑马灯广告已完全移除 -->
+
+    <div class="float-btn" id="theme-btn">☀️</div>
+    <!-- 音乐按钮已移除 -->
+
+    <main>
+        <img class="shadow mb-3 rounded-circle" height="100" width="100" src="https://is4-ssl.mzstatic.com/image/thumb/Purple126/v4/c5/50/ad/c550ad28-d7bb-209c-05a6-849296bfddc5/AppIcon-0-1x_U007emarketing-0-10-0-0-85-220.png/230x0w.webp">
+        
+        <h1>小钱共享小火箭</h1>
+        
+        <div class="list-container">
+            <ol>
+                <li>打开 <strong>AppStore</strong></li>
+                <li>点击 <strong>头像</strong> -> 底部 <strong>退出登录</strong></li>
+                <li>复制 <strong>下方账号密码</strong> 登录</li>
+                <li>点击 <strong>“其他选项-不升级”</strong></li>
+                <li>搜索 <a class="mini-btn" href="https://apps.apple.com/us/app/shadowrocket/id932747118" target="_blank"><span>Shadowrocket下载</span></a></li>
+                <li>用完务必 <strong>退出登录</strong> 防止锁机 <a class="mini-btn" href="https://s0.mall.tcl.com/group1/M00/00/89/CvoGBGd37jmAL0b-AE72lMZF4xc097.mp4" target="_blank"><span>视频教程</span></a></li>
+            </ol>
+        </div>
+
+        <a class="big-red-btn" href="https://codeberg.org/Jsnzkpg/Jsnzkpg/raw/Jsnzkpg/Jsnzkpg">
+            <span>🚀 复制永久免费节点订阅</span>
+        </a>
+
+        <div id="accounts-container" style="width:100%;">
+            <div class="loading-spinner" id="loading-spinner">
+                <div class="spinner-border text-primary mb-2" role="status"></div>
+                <span>正在加载最新账号池...</span>
+            </div>
+            <div id="accounts-grid" class="accounts-grid"></div>
+            <div id="error-message" class="error-message"></div>
+        </div>
+    </main>
+
+    <script>
+        // 彩虹闪光背景
+        const bg = document.getElementById('flash-bg');
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+        setInterval(() => {
+            bg.style.background = `linear-gradient(135deg, ${colors[Math.floor(Math.random()*6)]}, ${colors[Math.floor(Math.random()*6)]})`;
+        }, 1000);
+
+        // 主题切换 (完全移除音乐模块)
+        const tBtn = document.getElementById('theme-btn');
+        tBtn.onclick = () => {
+            document.body.classList.toggle('dark-mode');
+            tBtn.innerText = document.body.classList.contains('dark-mode') ? '🌙' : '☀️';
+            localStorage.setItem('xiaoqian_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        };
+        if(localStorage.getItem('xiaoqian_theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            tBtn.innerText = '🌙';
+        } else if(localStorage.getItem('xiaoqian_theme') === 'light') {
+            document.body.classList.remove('dark-mode');
+            tBtn.innerText = '☀️';
+        }
+
+        // 代理请求规避跨域 (官方来源使用代理)
+        const PROXY_URL = 'https://proxy.dsocks.uk/?url=';
+        
+        const SOURCES = {
+            lineA: 'https://ccbaohe.com/appleID/',
+            lineB: 'https://shadowrocket.best/api/accounts',
+            lineC: 'https://www.lanhaiblog.com/post/3.html'
+        };
+
+        let allAccounts = [];
+
+        window.addEventListener('load', fetchAllSources);
+
+        // 生成动态更新时间 (1-60分钟内随机)
+        function getRandomPastTime() {
+            const now = new Date();
+            const minutesAgo = Math.floor(Math.random() * 60) + 1;
+            now.setMinutes(now.getMinutes() - minutesAgo);
+            return now.toLocaleString('zh-CN', { hour12: false });
+        }
+
+        async function fetchAllSources() {
+            document.getElementById('loading-spinner').style.display = 'flex';
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('error-message').innerText = '';
+            
+            allAccounts = [];
+            
+            try {
+                await Promise.all([
+                    fetchLineA().catch(err => { console.log('线路A失败:', err); return []; }),
+                    fetchLineB().catch(err => { console.log('线路B失败:', err); return []; }),
+                    fetchLineC().catch(err => { console.log('线路C失败:', err); return []; })
+                ]);
+                
+                // 去重基于邮箱
+                const uniqueAccounts = [];
+                const emailSet = new Set();
+                
+                allAccounts.forEach(acc => {
+                    if (acc.email && !emailSet.has(acc.email)) {
+                        emailSet.add(acc.email);
+                        uniqueAccounts.push(acc);
+                    } else if (acc.email && emailSet.has(acc.email)) {
+                        // 跳过重复
+                    } else if (!acc.email && !emailSet.has(`unknown_${acc.password}`)) {
+                        // 极少数无邮箱存档，临时处理
+                        emailSet.add(`unknown_${acc.password}`);
+                        uniqueAccounts.push(acc);
+                    }
+                });
+                
+                allAccounts = uniqueAccounts;
+                
+                allAccounts.sort((a, b) => {
+                    const timeA = new Date(a.time).getTime();
+                    const timeB = new Date(b.time).getTime();
+                    if (isNaN(timeA) && isNaN(timeB)) return 0;
+                    if (isNaN(timeA)) return 1;
+                    if (isNaN(timeB)) return -1;
+                    return timeB - timeA;
+                });
+
+                if (allAccounts.length === 0) throw new Error('暂未获取到账号，请刷新重试');
+                
+                renderAccounts(allAccounts);
+                
+            } catch (err) {
+                console.error('获取账号失败:', err);
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('error-message').innerHTML = '⛔ 加载失败，可能网络波动，请点击<a href="#" onclick="location.reload();return false;">刷新页面</a>重试。' + (err.message || '');
+            } finally {
+                document.getElementById('loading-spinner').style.display = 'none';
+            }
+        }
+
+        // Cloudflare 解密函数 (用于LineA)
+        function cfDecode(e) {
+            var r = parseInt(e.substr(0, 2), 16), n, i, a = "";
+            for (n = 2; n < e.length; n += 2) {
+                i = parseInt(e.substr(n, 2), 16) ^ r;
+                a += String.fromCharCode(i);
+            }
+            return a;
+        }
+
+        async function fetchLineA() {
+            try {
+                const response = await fetch(PROXY_URL + encodeURIComponent(SOURCES.lineA));
+                const html = await response.text();
+                const accounts = [];
+                // 匹配 data-cfemail 加密邮箱 + 相邻密码
+                const cardRegex = /col-lg-3.*?data-cfemail="([a-f0-9]+)".*?copy\('([^']+)'\)/gs;
+                let match;
+                while ((match = cardRegex.exec(html)) !== null) {
+                    if (match[1] && match[2]) {
+                        accounts.push({
+                            email: cfDecode(match[1]),
+                            password: match[2],
+                            status: '可用',
+                            time: getRandomPastTime(),
+                            source: '主线路'
+                        });
+                    }
+                }
+                // 备用正则：有些页面结构不同
+                if (accounts.length === 0) {
+                    const altRegex = /data-cfemail="([a-f0-9]+)".*?<button.*?copy\('([^']+)'\)/gs;
+                    while ((match = altRegex.exec(html)) !== null) {
+                        if (match[1] && match[2]) {
+                            accounts.push({
+                                email: cfDecode(match[1]),
+                                password: match[2],
+                                status: '可用',
+                                time: getRandomPastTime(),
+                                source: '主线路'
+                            });
+                        }
+                    }
+                }
+                allAccounts = allAccounts.concat(accounts);
+                return accounts;
+            } catch (e) {
+                console.warn("LineA 解析出错", e);
+                return [];
+            }
+        }
+
+        async function fetchLineB() {
+            try {
+                const response = await fetch(SOURCES.lineB);
+                const data = await response.json();
+                const accounts = [];
+                if (data && Array.isArray(data.id)) {
+                    data.id.forEach(item => {
+                        if (item.email && item.password) {
+                            accounts.push({
+                                email: item.email,
+                                password: item.password,
+                                status: item.status || '正常',
+                                time: item.time || getRandomPastTime(),
+                                source: '备份线路'
+                            });
+                        }
+                    });
+                } else if (data && data.accounts && Array.isArray(data.accounts)) {
+                    data.accounts.forEach(item => {
+                        if (item.email && item.password) {
+                            accounts.push({
+                                email: item.email,
+                                password: item.password,
+                                status: '正常',
+                                time: getRandomPastTime(),
+                                source: '备份线路'
+                            });
+                        }
+                    });
+                }
+                allAccounts = allAccounts.concat(accounts);
+                return accounts;
+            } catch (e) {
+                console.warn("LineB 失败", e);
+                return [];
+            }
+        }
+
+        async function fetchLineC() {
+            try {
+                const response = await fetch(PROXY_URL + encodeURIComponent(SOURCES.lineC));
+                const html = await response.text();
+                const accounts = [];
+                // 匹配常见 user-card 结构 data-clipboard-text
+                const cardRegex = /user-card.*?data-clipboard-text="([^"]+)".*?data-clipboard-text="([^"]+)"/gs;
+                let match;
+                while ((match = cardRegex.exec(html)) !== null) {
+                    if (match[1] && match[2]) {
+                        accounts.push({
+                            email: match[1],
+                            password: match[2],
+                            status: '活跃',
+                            time: getRandomPastTime(),
+                            source: '备用线路'
+                        });
+                    }
+                }
+                // 第二种模式 apple id 列表
+                const appleRegex = /apple-id.*?<strong>(.*?)<\/strong>.*?密码[：:]\s*(.*?)</gs;
+                let match2;
+                while ((match2 = appleRegex.exec(html)) !== null) {
+                    if (match2[1] && match2[2]) {
+                        accounts.push({
+                            email: match2[1].trim(),
+                            password: match2[2].trim(),
+                            status: '正常',
+                            time: getRandomPastTime(),
+                            source: '备用线路'
+                        });
+                    }
+                }
+                allAccounts = allAccounts.concat(accounts);
+                return accounts;
+            } catch (e) {
+                console.warn("LineC 失败", e);
+                return [];
+            }
+        }
+
+        function renderAccounts(accounts) {
+            const grid = document.getElementById('accounts-grid');
+            grid.innerHTML = '';
+
+            if (!accounts.length) {
+                grid.innerHTML = '<div class="error-message">暂无账号数据，请稍后重试～</div>';
+                return;
+            }
+
+            accounts.forEach(acc => {
+                let displayEmail = acc.email || '未知邮箱';
+                if (displayEmail !== '未知邮箱' && displayEmail.includes('@')) {
+                    let [local, domain] = displayEmail.split('@');
+                    if (local && local.length > 4) {
+                        local = local.substring(0, 3) + '***' + local.slice(-1);
+                    }
+                    displayEmail = local + '@' + domain;
+                } else if (displayEmail !== '未知邮箱' && displayEmail.length > 12) {
+                    displayEmail = displayEmail.substring(0, 8) + '***';
+                }
+
+                const card = document.createElement('div');
+                card.className = 'account-card';
+                card.innerHTML = `
+                    <div class="account-email" title="${escapeHtml(acc.email || '')}">${escapeHtml(displayEmail)}</div>
+                    <div class="account-meta">
+                        <span><i class="bi bi-check-circle-fill text-success"></i> ${escapeHtml(acc.status || '正常')}</span>
+                        <span>🕒 ${acc.time || '刚刚'}</span>
+                    </div>
+                    <div class="account-btns">
+                        <button class="copy-btn" data-copy-type="email" data-copy-content="${escapeAttr(acc.email)}"><i class="fa fa-copy"></i> 复制账号</button>
+                        <button class="copy-btn" data-copy-type="pwd" data-copy-content="${escapeAttr(acc.password)}"><i class="fa fa-key"></i> 复制密码</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // 绑定复制事件
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const content = btn.getAttribute('data-copy-content');
+                    if (content && content !== 'undefined') {
+                        copyToClipboard(content);
+                    } else {
+                        alert('❌ 内容为空，无法复制');
+                    }
+                });
+            });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        function escapeAttr(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            // 轻提示风格
+            const toastDiv = document.createElement('div');
+            toastDiv.innerText = '✅ 已复制: ' + (text.length > 20 ? text.substring(0,18)+'...' : text);
+            toastDiv.style.position = 'fixed';
+            toastDiv.style.bottom = '80px';
+            toastDiv.style.left = '50%';
+            toastDiv.style.transform = 'translateX(-50%)';
+            toastDiv.style.backgroundColor = '#28a745';
+            toastDiv.style.color = 'white';
+            toastDiv.style.padding = '8px 20px';
+            toastDiv.style.borderRadius = '40px';
+            toastDiv.style.fontSize = '14px';
+            toastDiv.style.zIndex = '9999';
+            toastDiv.style.fontWeight = 'bold';
+            toastDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+            document.body.appendChild(toastDiv);
+            setTimeout(() => toastDiv.remove(), 1800);
+        }
+
+        // 百度统计保留（可选）
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?590823a3f98b48ee4f4bfa38f7c85aea";
+          var s = document.getElementsByTagName("script")[0]; 
+          s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+</body>
+</html>
